@@ -1,3 +1,5 @@
 loguru
 peewee
-
+coverage
+mock
+pylint
