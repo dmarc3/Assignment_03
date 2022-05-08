@@ -4,19 +4,8 @@ All edits made by Kathleen Wong to incorporate logging issues.
 '''
 # pylint: disable=R0903
 import logging
-
-
-class Users():
-    '''
-    Contains user information
-    '''
-
-    def __init__(self, user_id, email, user_name, user_last_name):
-        logging.info('%s status initialized.', user_id)
-        self.user_id = user_id
-        self.email = email
-        self.user_name = user_name
-        self.user_last_name = user_last_name
+import peewee as pw
+import socialnetwork_model as snm
 
 
 class UserCollection():
@@ -26,23 +15,24 @@ class UserCollection():
 
     def __init__(self):
         logging.info('UserCollection initialized.')
-        self.database = {}
+        self.database = snm.Users
 
-    def add_user(self, user_id, email, user_name, user_last_name):
+    def add_user(self, user_id, user_email, user_name, user_last_name):
         '''
         Adds a new user to the collection
         '''
-        if user_id in self.database:
-            # Rejects new status if user_id already exists
-            logging.error('Unable to modify %s because it ' \
-                          'does not exist in UserCollection.', user_id)
-            logging.debug("UserCollection contains following users: %s",
-                          ', '.join(self.database.keys()))
+        try:
+            user = self.database.create(user_id = user_id,
+                                        user_name = user_name,
+                                        user_last_name = user_last_name,
+                                        user_email = user_email)
+            user.save()
+            # logging.info('Successfully added user %s!', user_id)
+            return True
+        except pw.IntegrityError:
+            logging.error('Unable to add %s. Already exists in database.', user_id)
             return False
-        new_user = Users(user_id, email, user_name, user_last_name)
-        self.database[user_id] = new_user
-        logging.info('Successfully added user %s!', user_id)
-        return True
+            
 
     def modify_user(self, user_id, email, user_name, user_last_name):
         '''

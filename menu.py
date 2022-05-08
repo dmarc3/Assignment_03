@@ -4,7 +4,6 @@ Provides a basic frontend
 Kathleen incorporated all changes to users.py
 Marcus incorporated all changes to user_status.py code.
 '''
-# pylint: disable=W1203
 import sys
 import logging
 from datetime import datetime
@@ -15,10 +14,10 @@ FILE_FORMAT = "%(asctime)s %(filename)s:%(lineno)-4d %(levelname)s %(message)s"
 formatter = logging.Formatter(FILE_FORMAT)
 LOG_FILE = f'log_{datetime.today():%d-%m-%Y}.log'
 file_handler = logging .FileHandler(LOG_FILE)
-file_handler.setLevel(logging.DEBUG)
+file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(formatter)
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 # Add launch statement
 logger.info(f'Session launched at {datetime.today():%H:%M:%S}.')
@@ -183,13 +182,11 @@ if __name__ == '__main__':
         'D': update_user,
         'E': search_user,
         'F': delete_user,
-        'G': save_users,
-        'H': add_status,
-        'I': update_status,
-        'J': search_status,
-        'K': delete_status,
-        'L': save_status,
-        'Q': quit_program
+        'G': add_status,
+        'H': update_status,
+        'I': search_status,
+        'J': delete_status,
+        'K': quit_program
     }
     while True:
         user_selection = input("""
@@ -199,20 +196,20 @@ if __name__ == '__main__':
                             D: Update user
                             E: Search user
                             F: Delete user
-                            G: Save user database to file
-                            H: Add status
-                            I: Update status
-                            J: Search status
-                            K: Delete status
-                            L: Save status database to file
-                            Q: Quit
+                            G: Add status
+                            H: Update status
+                            I: Search status
+                            J: Delete status
+                            K: Quit
 
                             Please enter your choice: """)
         user_selection = user_selection.upper().strip()
         if user_selection in menu_options:
-            logging.info(f'User selected {user_selection} ' \
-                         f'-> executing {menu_options[user_selection].__name__}.')
+            logging.info('User selected %s ' \
+                         '-> executing %s.',
+                         user_selection,
+                         menu_options[user_selection].__name__)
             menu_options[user_selection]()
         else:
-            logging.info(f'{user_selection} is an invalid option.')
+            logging.info('%s is an invalid option.', user_selection)
             print("Invalid option")
