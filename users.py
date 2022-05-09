@@ -16,7 +16,7 @@ class UserCollection:
         logging.info('UserCollection initialized.')
         self.database = sm.Users
 
-    def add_user(self, user_id, email, user_name, user_last_name):
+    def add_user(self, user_id, user_email, user_name, user_last_name):
         '''
         Adds a new user to the collection
         '''
