@@ -36,7 +36,7 @@ class Status(BaseModel):
     Defines the Status
     '''
     status_id = pw.CharField(primary_key=True, unique=True)
-    user_id = pw.ForeignKeyField(User, backref='statuses', field='user_id')
+    user_id = pw.ForeignKeyField(Users, backref='statuses', field='user_id')
     status_text = pw.CharField()
 
 db.create_tables([Users, Status])
