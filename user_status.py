@@ -4,17 +4,8 @@ All edits by Marcus Bakke.
 '''
 # pylint: disable=R0903
 import logging
-
-class UserStatus():
-    '''
-    class to hold status message data
-    '''
-
-    def __init__(self, status_id, user_id, status_text):
-        logging.info('%s status initialized.', status_id)
-        self.status_id = status_id
-        self.user_id = user_id
-        self.status_text = status_text
+import peewee as pw
+import socialnetwork_model as sm
 
 
 class UserStatusCollection():
@@ -24,25 +15,22 @@ class UserStatusCollection():
 
     def __init__(self):
         logging.info('UserStatusCollection initialized.')
-        self.database = {}
+        self.database = sm.Status
 
     def add_status(self, status_id, user_id, status_text):
         '''
         add a new status message to the collection
         '''
-        logging.info('Attempting to add status %s to UserStatusCollection...', status_id)
-        if status_id in self.database:
-            # Rejects new status if status_id already exists
-            logging.error('Unable to add %s because it ' \
-                          'already exists in UserStatusCollection.',
-                          status_id)
-            logging.debug("UserStatusCollection contains following status': %s",
-                          ', '.join(self.database.keys()))
+        try:
+            status = self.database.create(status_id = status_id,
+                                          user_id = user_id,
+                                          status_text = status_text)
+            status.save()
+            # logging.info('Successfully added status %s!', status_id)
+            return True
+        except pw.IntegrityError:
+            logging.error('Unable to add %s.')
             return False
-        new_status = UserStatus(status_id, user_id, status_text)
-        self.database[status_id] = new_status
-        logging.info('Successfully added status %s!', status_id)
-        return True
 
     def modify_status(self, status_id, user_id, status_text):
         '''
