@@ -24,7 +24,7 @@ class UserCollection:
             with sm.db.transaction():
                 new_user = self.database.create(
                     user_id=user_id,
-                    user_email=email,
+                    user_email=user_email,
                     user_name=user_name,
                     user_last_name=user_last_name,)
                 new_user.save()
@@ -35,7 +35,7 @@ class UserCollection:
             logging.info('See how the database protects our data')
             return False
 
-    def modify_user(self, user_id, email, user_name, user_last_name):
+    def modify_user(self, user_id, user_email, user_name, user_last_name):
         '''
         Modifies an existing user
         '''
@@ -45,7 +45,7 @@ class UserCollection:
             logging.debug("UserCollection contains following users': %s",
                           ', '.join(self.database.keys()))
             return False
-        self.database[user_id].email = email
+        self.database[user_id].email = user_email
         self.database[user_id].user_name = user_name
         self.database[user_id].user_last_name = user_last_name
         logging.info('Successfully modified user %s!', user_id)

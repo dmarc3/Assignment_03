@@ -81,7 +81,7 @@ def search_user():
         print("ERROR: User does not exist")
     else:
         print(f"User ID: {result.user_id}")
-        print(f"Email: {result.email}")
+        print(f"Email: {result.user_email}")
         print(f"Name: {result.user_name}")
         print(f"Last name: {result.user_last_name}")
 
