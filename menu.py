@@ -11,6 +11,9 @@ from datetime import datetime
 import main
 
 # Build logger
+import menu
+import users
+
 FILE_FORMAT = "%(asctime)s %(filename)s:%(lineno)-4d %(levelname)s %(message)s"
 formatter = logging.Formatter(FILE_FORMAT)
 LOG_FILE = f'log_{datetime.today():%d-%m-%Y}.log'
@@ -210,7 +213,7 @@ if __name__ == '__main__':
                             Please enter your choice: """)
         user_selection = user_selection.upper().strip()
         if user_selection in menu_options:
-            logging.info(f'User selected {user_selection} ' \
+            logging.info(f'User selected {user_selection} '\
                          f'-> executing {menu_options[user_selection].__name__}.')
             menu_options[user_selection]()
         else:

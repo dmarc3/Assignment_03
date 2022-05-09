@@ -5,6 +5,8 @@ import csv
 import re
 import users
 import user_status
+import socialnetwork_model as sm
+
 
 def init_user_collection():
     '''
@@ -241,6 +243,7 @@ def load_collection(filename, keys, collection, func):
     except FileNotFoundError:
         return False
 
+
 def save_collection(filename, keys, collection):
     '''
     Method which writes status or user collection to CSV file
@@ -293,6 +296,7 @@ def validate_name(name):
         return False
     return True
 
+
 def validate_status_id(status_id):
     '''
     Validates status_id
@@ -312,6 +316,7 @@ def validate_status_id(status_id):
     except ValueError:
         return False
 
+
 def validate_status_text(status_text):
     '''
     Accept any text input
@@ -319,6 +324,7 @@ def validate_status_text(status_text):
     if isinstance(status_text, str):
         return True
     return False
+
 
 def validate_user_inputs(user_id, email, user_name, user_last_name):
     '''
@@ -338,6 +344,7 @@ def validate_user_inputs(user_id, email, user_name, user_last_name):
         print(f'Invalid LASTNAME: {user_last_name}')
         return False
     return True
+
 
 def validate_status_inputs(status_id, user_id, status_text):
     '''
