@@ -5,7 +5,7 @@ All edits by Marcus Bakke.
 # pylint: disable=R0903
 import logging
 import peewee as pw
-import socialnetwork_model as snm
+import socialnetwork_model as sm
 
 
 class UserStatusCollection():
@@ -15,7 +15,7 @@ class UserStatusCollection():
 
     def __init__(self):
         logging.info('UserStatusCollection initialized.')
-        self.database = snm.Status
+        self.database = sm.Status
 
     def add_status(self, status_id, user_id, status_text):
         '''
