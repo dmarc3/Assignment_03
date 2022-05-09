@@ -7,7 +7,7 @@ import logging
 import peewee as pw
 import users
 import user_status
-import socialnetwork_model as snm
+import socialnetwork_model as sm
 
 
 def init_user_collection():
@@ -206,7 +206,7 @@ def load_collection(filename, keys, collection, func):
                 # Append data
                 data.append(new_row)
         # Execute bulk data insertion
-        with snm.db.atomic():
+        with sm.db.atomic():
             # This specifies how large the chunks to load with insert_many should be
             # It seems this number is dependent on the specs of the computer...
             # You may need to adjust this if it doesn't run on your computer.
