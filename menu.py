@@ -52,9 +52,9 @@ def add_user():
                          user_name,
                          user_last_name,
                          user_collection):
-        print("An error occurred while trying to add new user")
+        logging.info("An error occurred while trying to add new user")
     else:
-        print("User was successfully added")
+        logging.info("User was successfully added")
 
 
 def update_user():
@@ -66,9 +66,9 @@ def update_user():
     user_name = input('User name: ')
     user_last_name = input('User last name: ')
     if main.update_user(user_id, email, user_name, user_last_name, user_collection):
-        print("User was successfully updated")
+        logging.info("User was successfully updated")
     else:
-        print("An error occurred while trying to update user")
+        logging.info("An error occurred while trying to update user")
 
 
 def search_user():
@@ -78,12 +78,12 @@ def search_user():
     user_id = input('Enter user ID to search: ')
     result = main.search_user(user_id, user_collection)
     if not result:
-        print("ERROR: User does not exist")
+        logging.info("ERROR: User does not exist")
     else:
-        print(f"User ID: {result.user_id}")
-        print(f"Email: {result.user_email}")
-        print(f"Name: {result.user_name}")
-        print(f"Last name: {result.user_last_name}")
+        logging.info('User ID: %s', result.user_id)
+        logging.info('Email: %s', result.email)
+        logging.info('Name: %s', result.user_name)
+        logging.info('Last name: %s', result.user_last_name)
 
 
 def delete_user():
@@ -92,9 +92,9 @@ def delete_user():
     '''
     user_id = input('User ID: ')
     if not main.delete_user(user_id, user_collection):
-        print("An error occurred while trying to delete user")
+        logging.info("An error occurred while trying to delete user")
     else:
-        print("User was successfully deleted")
+        logging.info("User was successfully deleted")
 
 
 def save_users():
@@ -113,9 +113,9 @@ def add_status():
     status_id = input('Status ID: ')
     status_text = input('Status text: ')
     if not main.add_status(user_id, status_id, status_text, status_collection):
-        print("An error occurred while trying to add new status")
+        logging.info("An error occurred while trying to add new status")
     else:
-        print("New status was successfully added")
+        logging.info("New status was successfully added")
 
 
 def update_status():
@@ -126,9 +126,9 @@ def update_status():
     status_id = input('Status ID: ')
     status_text = input('Status text: ')
     if not main.update_status(status_id, user_id, status_text, status_collection):
-        print("An error occurred while trying to update status")
+        logging.info("An error occurred while trying to update status")
     else:
-        print("Status was successfully updated")
+        logging.info("Status was successfully updated")
 
 
 def search_status():
@@ -138,11 +138,11 @@ def search_status():
     status_id = input('Enter status ID to search: ')
     result = main.search_status(status_id, status_collection)
     if not result:
-        print("ERROR: Status does not exist")
+        logging.info("ERROR: Status does not exist")
     else:
-        print(f"User ID: {result.user_id}")
-        print(f"Status ID: {result.status_id}")
-        print(f"Status text: {result.status_text}")
+        logging.info("User ID: %s", result.user_id)
+        logging.info("Status ID: %s", result.status_id)
+        logging.info("Status text: %s", result.status_text)
 
 
 def delete_status():
@@ -151,9 +151,9 @@ def delete_status():
     '''
     status_id = input('Status ID: ')
     if not main.delete_status(status_id, status_collection):
-        print("An error occurred while trying to delete status")
+        logging.info("An error occurred while trying to delete status")
     else:
-        print("Status was successfully deleted")
+        logging.info("Status was successfully deleted")
 
 
 def save_status():
@@ -212,4 +212,4 @@ if __name__ == '__main__':
             menu_options[user_selection]()
         else:
             logging.info('%s is an invalid option.', user_selection)
-            print("Invalid option")
+            logging.info("Invalid option")

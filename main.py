@@ -172,7 +172,7 @@ def search_status(status_id, status_collection):
     - Otherwise, it returns None.
     '''
     result = status_collection.search_status(status_id)
-    if result.status_id:
+    if result:
         return result
     return None
 

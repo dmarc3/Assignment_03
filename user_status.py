@@ -26,49 +26,38 @@ class UserStatusCollection():
                                           user_id = user_id,
                                           status_text = status_text)
             status.save()
-            # logging.info('Successfully added status %s!', status_id)
+            logging.info('Added status %s by %s.', status_id, user_id)
             return True
         except pw.IntegrityError:
-            logging.error('Unable to add %s.')
+            logging.error('Unable to add %s.', status_id)
             return False
 
     def modify_status(self, status_id, user_id, status_text):
         '''
         Modifies a status message
-
-        The new user_id and status_text are assigned to the existing message
         '''
-        logging.info('Attempting to modify status %s...', status_id)
-        if status_id not in self.database:
-            # Rejects update is the status_id does not exist
-            logging.error('Unable to modify %s because it ' \
-                          'does not exist in UserStatusCollection.',
-                          status_id)
-            logging.debug("UserStatusCollection contains following status': %s",
-                          ', '.join(self.database.keys()))
+        try:
+            status = self.database.get(sm.Status.status_id == status_id)
+            status.status_text = status_text
+            status.save()
+            logging.info('Modified status %s by %s.', status_id, user_id)
+            return True
+        except self.database.DoesNotExist:
+            logging.error('Unable to modify %s.', status_id)
             return False
-        self.database[status_id].user_id = user_id
-        self.database[status_id].status_text = status_text
-        logging.info('Successfully modified status %s!', status_id)
-        return True
 
     def delete_status(self, status_id):
         '''
         deletes the status message with id, status_id
         '''
-        logging.info('Attempting to delete status %s from UserStatusCollection...',
-                     status_id)
-        if status_id not in self.database:
-            # Fails if status does not exist
-            logging.error('Unable to delete %s because it ' \
-                          'does not exist in UserStatusCollection.',
-                          status_id)
-            logging.debug("UserStatusCollection contains following status': %s",
-                          ', '.join(self.database.keys()))
+        try:
+            status = self.database.get(sm.Status.status_id == status_id)
+            status.delete_instance()
+            logging.info('Deleted status %s.', status_id)
+            return True
+        except self.database.DoesNotExist:
+            logging.error('Unable to delete %s.', status_id)
             return False
-        del self.database[status_id]
-        logging.info('Successfully deleted status %s!', status_id)
-        return True
 
     def search_status(self, status_id):
         '''
@@ -76,14 +65,10 @@ class UserStatusCollection():
 
         Returns an empty UserStatus object if status_id does not exist
         '''
-        logging.info('Attempting to find status %s in UserStatusCollection...',
-                     status_id)
-        if status_id not in self.database:
-            # Fails if the status does not exist
-            logging.error('Unable to find %s in UserStatusCollection.',
-                          status_id)
-            logging.debug("UserStatusCollection contains following status': %s",
-                          ', '.join(self.database.keys()))
-            return UserStatus(None, None, None)
-        logging.info('Successfully found status %s!', status_id)
-        return self.database[status_id]
+        try:
+            status = self.database.get(sm.Status.status_id == status_id)
+            logging.info('Found status %s.', status_id)
+            return status
+        except self.database.DoesNotExist:
+            logging.error('Unable to find %s.', status_id)
+            return None
