@@ -1,6 +1,7 @@
 '''
 Unittest module.
 Disable "Too many public methods" pylint message.
+Authors: Kathleen Wong and Marcus Bakke
 '''
 # pylint: disable=R0904
 import unittest
@@ -50,6 +51,7 @@ class TestMain(unittest.TestCase):
     def test_init_status_collection(self):
         '''
         Test UserStatusCollection initialization
+        Author: Marcus Bakke
         '''
         user_status_collection = main.init_status_collection()
         self.assertEqual(type(user_status_collection), type(user_status.UserStatusCollection()))
@@ -102,6 +104,7 @@ class TestMain(unittest.TestCase):
     def test_load_status_updates(self):
         '''
         Test load_status_updates method
+        Author: Marcus Bakke
         '''
         # Load some user data
         main.load_users(os.path.join('test_files',
@@ -249,6 +252,7 @@ class TestMain(unittest.TestCase):
     def test_add_status(self):
         '''
         Test add_status method
+        Author: Marcus Bakke
         '''
         # Load some user data
         main.load_users(os.path.join('test_files',
@@ -283,6 +287,7 @@ class TestMain(unittest.TestCase):
     def test_update_status(self):
         '''
         Test update_status method
+        Author: Marcus Bakke
         '''
         # Load some user data
         main.load_users(os.path.join('test_files',
@@ -321,6 +326,7 @@ class TestMain(unittest.TestCase):
     def test_delete_status(self):
         '''
         Test delete_status method
+        Author: Marcus Bakke
         '''
         # Load some user data
         main.load_users(os.path.join('test_files',
@@ -344,6 +350,7 @@ class TestMain(unittest.TestCase):
     def test_search_status(self):
         '''
         Test search_status method
+        Author: Marcus Bakke
         '''
         # Load some user data
         main.load_users(os.path.join('test_files',
@@ -400,6 +407,7 @@ class TestMain(unittest.TestCase):
     def test_validate_status_inputs(self):
         '''
         Test validate_status_inputs method
+        Author: Marcus Bakke
         '''
         # Test valid inputs
         inputs = [['dave03_00001', 'dave03', 'test1'],

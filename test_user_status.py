@@ -1,5 +1,6 @@
 '''
 Unittests for user_status.py.
+Author: Marcus Bakke
 '''
 import unittest
 import peewee as pw

@@ -1,6 +1,6 @@
 '''
 Classes to manage the user status messages
-All edits by Marcus Bakke.
+Author: Marcus Bakke
 '''
 # pylint: disable=R0903
 import logging

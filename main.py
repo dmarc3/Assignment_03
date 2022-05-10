@@ -1,5 +1,7 @@
 '''
 main driver for a simple social network project
+
+Authors: Kathleen Wong and Marcus Bakke
 '''
 import csv
 import re
@@ -20,6 +22,8 @@ def init_user_collection():
 def init_status_collection():
     '''
     Creates and returns a new instance of UserStatusCollection
+    
+    Author: Marcus Bakke
     '''
     return user_status.UserStatusCollection()
 
@@ -43,7 +47,7 @@ def load_users(filename, user_collection):
             'EMAIL':    {'validate': validate_email,    'key': 'user_email'},
             'NAME':     {'validate': validate_name,     'key': 'user_name'},
             'LASTNAME': {'validate': validate_name,     'key': 'user_last_name'}}
-    return load_collection(filename, keys, user_collection, 'add_user')
+    return load_collection(filename, keys, user_collection)
 
 
 def load_status_updates(filename, status_collection):
@@ -57,11 +61,13 @@ def load_status_updates(filename, status_collection):
     - Returns False if there are any errors(such as empty fields in the
       source CSV file)
     - Otherwise, it returns True.
+
+    Author: Marcus Bakke
     '''
     keys = {'STATUS_ID':   {'validate': validate_status_id,   'key': 'status_id'},
             'USER_ID':     {'validate': validate_user_id,     'key': 'user_id'},
             'STATUS_TEXT': {'validate': validate_status_text, 'key': 'status_text'}}
-    return load_collection(filename, keys, status_collection, 'add_status')
+    return load_collection(filename, keys, status_collection)
 
 
 def add_user(user_id, email, user_name, user_last_name, user_collection):
@@ -130,6 +136,8 @@ def add_status(user_id, status_id, status_text, status_collection):
     - Returns False if there are any errors (for example, if
       user_collection.add_status() returns False).
     - Otherwise, it returns True.
+
+    Author: Marcus Bakke
     '''
     # Validate inputs
     if not validate_status_inputs(status_id, user_id, status_text):
@@ -144,6 +152,8 @@ def update_status(status_id, user_id, status_text, status_collection):
     Requirements:
     - Returns False if there any errors.
     - Otherwise, it returns True.
+
+    Author: Marcus Bakke
     '''
     # Validate inputs
     if not validate_status_inputs(status_id, user_id, status_text):
@@ -158,6 +168,8 @@ def delete_status(status_id, status_collection):
     Requirements:
     - Returns False if there are any errors (such as status_id not found)
     - Otherwise, it returns True.
+
+    Author: Marcus Bakke
     '''
     return status_collection.delete_status(status_id)
 
@@ -170,6 +182,8 @@ def search_status(status_id, status_collection):
     - If the status is found, returns the corresponding
     UserStatus instance.
     - Otherwise, it returns None.
+
+    Author: Marcus Bakke
     '''
     result = status_collection.search_status(status_id)
     if result:
@@ -178,9 +192,11 @@ def search_status(status_id, status_collection):
 
 # New functions
 
-def load_collection(filename, keys, collection, func):
+def load_collection(filename, keys, collection):
     '''
     Method which loads status or user collection from CSV file
+    
+    Author: Marcus Bakke
     '''
     # Loop through each row in csv file
     try:

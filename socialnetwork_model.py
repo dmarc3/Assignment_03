@@ -1,5 +1,6 @@
 '''
 Implementation of database model.
+Authors: Kathleen Wong and Marcus Bakke
 '''
 import os
 import logging
