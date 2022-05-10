@@ -39,15 +39,15 @@ class UserCollection:
         '''
         Modifies an existing user
         '''
-        if user_id not in self.database:
+        if user_id not in self.database.user_id:
             logging.error('Unable to modify %s because it ' \
                           'does not exist in UserCollection.', user_id)
             logging.debug("UserCollection contains following users': %s",
                           ', '.join(self.database.keys()))
             return False
-        self.database[user_id].email = user_email
-        self.database[user_id].user_name = user_name
-        self.database[user_id].user_last_name = user_last_name
+        self.database.email = user_email
+        self.database.user_name = user_name
+        self.database.user_last_name = user_last_name
         logging.info('Successfully modified user %s!', user_id)
         return True
 
@@ -55,7 +55,7 @@ class UserCollection:
         '''
         Deletes an existing user
         '''
-        if user_id not in self.database:
+        if user_id not in self.database.user_id:
             # Fails if status does not exist
             logging.error('Unable to delete %s because it '
                           'does not exist in UserCollection.', user_id)
@@ -63,14 +63,15 @@ class UserCollection:
                           ', '.join(self.database.keys()))
             return False
         try:
-            user = sm.Users.get(user_id == user_id)
-            user.delete_instance()
+            user_query = self.database.get(self.database.user_id == user_id)
+            user_query.delete_instance()
+            logging.info('Successfully deleted user %s!', user_id)
+            return True
         except Exception as e:
             logging.info(f'Error deleting user = {user_id}')
             logging.info(e)
             logging.info('See how the database protects our data')
-        logging.info('Successfully deleted user %s!', user_id)
-        return True
+            return False
 
     def search_user(self, user_id):
         '''
