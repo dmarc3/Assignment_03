@@ -36,6 +36,14 @@ class Users(BaseModel):
     user_last_name = pw.CharField(max_length=100)
     user_email = pw.CharField()
 
+    class Meta:
+        '''
+        Implement constraints
+        '''
+        constraints = [pw.Check('LENGTH(user_id) < 30'),
+                       pw.Check('LENGTH(user_name) < 30'),
+                       pw.Check('LENGTH(user_last_name) < 100')]
+
 class Status(BaseModel):
     '''
     Defines the Status
