@@ -15,6 +15,7 @@ import socialnetwork_model as sm
 MODELS = [sm.Users, sm.Status]
 test_db = pw.SqliteDatabase(':memory:')
 
+
 class TestMain(unittest.TestCase):
     '''
     Test class for main.py
@@ -69,8 +70,8 @@ class TestMain(unittest.TestCase):
                                                        'test_bad_accounts_1.csv'),
                                           self.status_collection)
         self.assertFalse(fail)
+        fake = main.load_users(filename, user_collection)
 
-        
     def test_add_user(self):
         '''
         Test add_user method
@@ -82,6 +83,13 @@ class TestMain(unittest.TestCase):
         self.assertTrue(result)
         fail = main.add_user('kwong', 'kwong@gmail.com', 'Kathleen', 'Wong', user_collection)
         self.assertFalse(fail)
+        email = main.add_user('kwong', 'kwong', 'Kathleen', 'Wong', user_collection)
+        self.assertFalse(email)
+        user_id = main.add_user('k wong', 'kwong@gmail.com', 'Kathleen', 'Wong', user_collection)
+        self.assertFalse(user_id)
+        user_name = main.add_user('kwong', 'kwong@gmail.com', "kath-leen", 'Wong', user_collection)
+        self.assertFalse(user_name)
+
 
     def test_update_user(self):
         '''
@@ -103,6 +111,8 @@ class TestMain(unittest.TestCase):
         self.assertTrue(result)
         fail = main.update_user('fail', 'fail@gmail.com', 'Fail', 'Test', user_collection)
         self.assertFalse(fail)
+        email = main.update_user('dave03', 'fail',  'Fail', 'Test', user_collection)
+        self.assertFalse(email)
 
     def test_delete_user(self):
         '''
@@ -144,8 +154,10 @@ class TestMain(unittest.TestCase):
                   self.status_collection]
         result = main.add_status(*inputs)
         self.assertTrue(result)
-        status = self.status_collection.database.get(self.status_collection.database.status_id == inputs[1])
-        self.assertEqual(status.user.user_id, inputs[0])
+        status = self.status_collection.database.get(
+                 self.status_collection.database.status_id == inputs[1])
+        self.assertEqual(status.user_id,
+                         inputs[0])
         self.assertEqual(status.status_id, inputs[1])
         self.assertEqual(status.status_text, inputs[2])
         # Test add_status function failure
@@ -162,6 +174,8 @@ class TestMain(unittest.TestCase):
                   self.status_collection]
         result = main.add_status(*inputs)
         self.assertFalse(result)
+        fail = main.add_status('fake', 'faketest', 'fake', self.status_collection)
+        self.assertFalse(fail)
 
     def test_update_status(self):
         '''
@@ -183,9 +197,10 @@ class TestMain(unittest.TestCase):
                   self.status_collection]
         result = main.update_status(*inputs)
         self.assertTrue(result)
-        status = self.status_collection.database.get(self.status_collection.database.status_id == inputs[0])
+        status = self.status_collection.database.get(
+                 self.status_collection.database.status_id == inputs[0])
         self.assertEqual(status.status_id, inputs[0])
-        self.assertEqual(status.user.user_id, inputs[1])
+        self.assertEqual(status.user_id, inputs[1])
         self.assertEqual(status.status_text, inputs[2])
         # Test add_status function failure
         inputs = ['mbakke63_00001',
@@ -201,6 +216,18 @@ class TestMain(unittest.TestCase):
                   self.status_collection]
         result = main.update_status(*inputs)
         self.assertFalse(result)
+        bad_results = main.load_status_updates(os.path.join('test_files',
+                                              'test_bad_status_updates.csv'),
+                                 self.status_collection)
+        self.assertFalse(bad_results)
+        bad_format_results = main.load_status_updates(os.path.join('test_files',
+                                              'test_bad_status_updates_2.csv'),
+                                 self.status_collection)
+        self.assertFalse(bad_format_results)
+        fake = main.load_status_updates(os.path.join('test_files',
+                                              'fake.csv'),
+                                 self.status_collection)
+        self.assertFalse(fake)
 
     def test_delete_status(self):
         '''
@@ -219,7 +246,8 @@ class TestMain(unittest.TestCase):
         inputs = ['evmiles97_00001', self.status_collection]
         result = main.delete_status(*inputs)
         self.assertTrue(result)
-        status = self.status_collection.database.get_or_none(self.status_collection.database.status_id == inputs[0])
+        status = self.status_collection.database.get_or_none(
+                 self.status_collection.database.status_id == inputs[0])
         self.assertIsNone(status)
         # Test add_status function failure
         inputs = ['mbakke63_00001', self.status_collection]
@@ -243,7 +271,7 @@ class TestMain(unittest.TestCase):
         inputs = ['evmiles97_00001', self.status_collection]
         status = main.search_status(*inputs)
         self.assertEqual(status.status_id, 'evmiles97_00001')
-        self.assertEqual(status.user.user_id, 'evmiles97')
+        self.assertEqual(status.user_id, 'evmiles97')
         self.assertEqual(status.status_text, 'Code is finally compiling')
         # Test search_status function failure
         inputs = ['mbakke63_00001', self.status_collection]
