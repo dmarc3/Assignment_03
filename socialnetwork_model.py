@@ -44,4 +44,5 @@ class Status(BaseModel):
     user = pw.ForeignKeyField(Users, on_delete='CASCADE', to_field='user_id')
     status_text = pw.CharField()
 
+
 db.create_tables([Users, Status])
