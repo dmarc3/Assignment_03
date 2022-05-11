@@ -20,7 +20,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(file_handler)
 # Add launch statement
-logger.info(f'Session launched at {datetime.today():%H:%M:%S}.')
+logger.info('Session launched at %s.', datetime.today().strftime(':%H:%M:%S'))
 
 
 def load_users():
@@ -97,14 +97,6 @@ def delete_user():
         logging.info("User was successfully deleted")
 
 
-def save_users():
-    '''
-    Saves user database into a file
-    '''
-    filename = input('Enter filename for users file: ')
-    main.save_users(filename, user_collection)
-
-
 def add_status():
     '''
     Adds a new status into the database
@@ -154,14 +146,6 @@ def delete_status():
         logging.info("An error occurred while trying to delete status")
     else:
         logging.info("Status was successfully deleted")
-
-
-def save_status():
-    '''
-    Saves status database into a file
-    '''
-    filename = input('Enter filename for status file: ')
-    main.save_status_updates(filename, status_collection)
 
 
 def quit_program():

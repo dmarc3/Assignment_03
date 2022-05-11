@@ -1,29 +1,31 @@
 '''
 Implementation of database model.
+Authors: Kathleen Wong and Marcus Bakke
 '''
+# pylint: disable=R0903
 import os
 import logging
 import peewee as pw
 
-file = 'socialnetwork.db'
-if not os.path.exists(file):
-    logging.info('Creating database as %s', file)
+FILE = 'socialnetwork.db'
+if not os.path.exists(FILE):
+    logging.info('Creating database as %s', FILE)
 else:
-    logging.info('Loading database: %s', file)
-db = pw.SqliteDatabase(file)
+    logging.info('Loading database: %s', FILE)
+db = pw.SqliteDatabase(FILE)
 db.connect()
 db.execute_sql('PRAGMA foreign_keys = ON;')
-
 
 class BaseModel(pw.Model):
     '''
     Define base model via PeeWee.Model
     '''
     logging.info('Model initialized.')
-
     class Meta:
+        '''
+        Meta class for BaseModel
+        '''
         database = db
-
 
 class Users(BaseModel):
     '''
@@ -34,14 +36,12 @@ class Users(BaseModel):
     user_last_name = pw.CharField(max_length=100)
     user_email = pw.CharField()
 
-
 class Status(BaseModel):
     '''
     Defines the Status
     '''
     status_id = pw.CharField(primary_key=True, unique=True)
-    # user_id = pw.CharField(unique=True, max_length=30)
-    user_id = pw.ForeignKeyField(Users, on_delete='CASCADE', to_field='user_id')
+    user = pw.ForeignKeyField(Users, on_delete='CASCADE', to_field='user_id')
     status_text = pw.CharField()
 
 
