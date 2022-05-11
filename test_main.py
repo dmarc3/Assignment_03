@@ -71,6 +71,7 @@ class TestMain(unittest.TestCase):
                                           self.status_collection)
         self.assertFalse(fail)
         fake = main.load_users(filename, user_collection)
+        self.assertFalse(fake)
 
     def test_add_user(self):
         '''
@@ -87,9 +88,12 @@ class TestMain(unittest.TestCase):
         self.assertFalse(email)
         user_id = main.add_user('k wong', 'kwong@gmail.com', 'Kathleen', 'Wong', user_collection)
         self.assertFalse(user_id)
-        user_name = main.add_user('kwong', 'kwong@gmail.com', "kath-leen", 'Wong', user_collection)
+        user_name = main.add_user('name', 'kwong@gmail.com', 'kathleen123',
+                                  'wong123', user_collection)
         self.assertFalse(user_name)
-
+        user_last_name = main.add_user('name', 'kwong@gmail.com',
+                                       'kathleen', 'wong123', user_collection)
+        self.assertFalse(user_last_name)
 
     def test_update_user(self):
         '''
