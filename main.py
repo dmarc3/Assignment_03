@@ -121,7 +121,7 @@ def search_user(user_id, user_collection):
     - Otherwise, it returns None.
     '''
     result = user_collection.search_user(user_id)
-    if result.user_id:
+    if result:
         return result
     return None
 

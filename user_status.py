@@ -2,7 +2,6 @@
 Classes to manage the user status messages
 Author: Marcus Bakke
 '''
-# pylint: disable=R0903
 import logging
 import peewee as pw
 import socialnetwork_model as sm

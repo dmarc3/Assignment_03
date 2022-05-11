@@ -33,20 +33,11 @@ class TestMain(unittest.TestCase):
     def test_init_user_collection(self):
         '''
         Test UserCollection initialization
+        Author: Kathleen Wong
         '''
         user_collection = main.init_user_collection()
         self.assertEqual(type(user_collection), type(users.UserCollection()))
-        self.assertEqual(user_collection.database, {})
-
-    def test_users(self):
-        '''
-        Test Users class initialization
-        '''
-        user = users.Users('test123', 'myemail@gmail.com', 'Test1', 'Test2')
-        self.assertEqual(user.user_id, 'test123')
-        self.assertEqual(user.email, 'myemail@gmail.com')
-        self.assertEqual(user.user_name, 'Test1')
-        self.assertEqual(user.user_last_name, 'Test2')
+        self.assertEqual(user_collection.database, sm.Users)
 
     def test_init_status_collection(self):
         '''
@@ -60,194 +51,82 @@ class TestMain(unittest.TestCase):
     def test_load_users(self):
         '''
         Test load_users method
+        Author: Kathleen Wong
         '''
         # Test good accounts
         user_collection = main.init_user_collection()
         filename = os.path.join('test_files', 'test_good_accounts.csv')
         result = main.load_users(filename, user_collection)
-        expected = {'dave03': users.Users('dave03', 'david.yuen@gmail.com', 'David', 'Yuen'),
-                    'evmiles97': users.Users('evmiles97', 'eve.miles@uw.edu', 'Eve', 'Miles')}
-        for key, value in user_collection.database.items():
-            for attr in ['user_id', 'email', 'user_name', 'user_last_name']:
-                self.assertEqual(getattr(value, attr), getattr(expected[key], attr))
+        expected = [['evmiles97', 'eve.miles@uw.edu', 'Eve', 'Miles'],
+                   ['dave03', 'david.yuen@gmail.com', 'David', 'Yuen']]
         self.assertTrue(result)
-
-        # Test bad accounts
-        user_collection = main.init_user_collection()
-        filenames = [os.path.join('test_files', 'test_bad_accounts_1.csv'),
-                     os.path.join('test_files', 'test_bad_accounts_2.csv'),
-                     os.path.join('test_files', 'test_bad_accounts_3.csv'),
-                     os.path.join('test_files', 'test_bad_accounts_4.csv'),
-                     'this_file_doesnt_exist.csv']
-        for filename in filenames:
-            result = main.load_users(filename, user_collection)
-            self.assertFalse(result)
-
-    def test_save_users(self):
-        '''
-        Test save_users method
-        '''
-        # Successful Save
-        user_collection = main.init_user_collection()
-        filename = os.path.join('test_files', 'test_good_accounts.csv')
-        main.load_users(filename, user_collection)
-        main.add_user('mbak79', 'mbakke4@uw.edu', 'Marcus', 'Bakke', user_collection)
-        out_file = os.path.join('test_files', 'saved_add_accounts.csv')
-        exp_file = os.path.join('test_files', 'test_save_accounts.csv')
-        main.save_users(out_file, user_collection)
-        with open(out_file, 'r', encoding='utf-8') as out:
-            with open(exp_file, 'r', encoding='utf-8') as exp:
-                self.assertEqual(out.readline(), exp.readline())
-        # Unsuccessful Save
-        self.assertFalse(main.save_users('this/folder/doesnt/exist.csv', user_collection))
-
-    def test_load_status_updates(self):
-        '''
-        Test load_status_updates method
-        Author: Marcus Bakke
-        '''
-        # Load some user data
-        main.load_users(os.path.join('test_files',
-                                     'test_good_accounts.csv'),
-                        self.user_collection)
-        # Test good status
-        result = main.load_status_updates(os.path.join('test_files',
-                                                       'test_good_status_updates.csv'),
+        for i, user in enumerate(self.user_collection.database):
+            self.assertEqual(user.user_id, expected[i][0])
+            self.assertEqual(user.user_email, expected[i][1])
+            self.assertEqual(user.user_name, expected[i][2])
+            self.assertEqual(user.user_last_name, expected[i][3])
+        fail = main.load_status_updates(os.path.join('test_files',
+                                                       'test_bad_accounts_1.csv'),
                                           self.status_collection)
-        self.assertTrue(result)
-        expected = [['evmiles97_00001', 'evmiles97', 'Code is finally compiling'],
-                    ['dave03_00001', 'dave03', 'Sunny in Seattle this morning'],
-                    ['evmiles97_00002', 'evmiles97', 'Perfect weather for a hike']]
-        for i, status in enumerate(self.status_collection.database):
-            self.assertEqual(status.status_id, expected[i][0])
-            self.assertEqual(status.user.user_id, expected[i][1])
-            self.assertEqual(status.status_text, expected[i][2])
-        # Test bad status
-        result = main.load_status_updates(os.path.join('test_files',
-                                                       'test_bad_status_updates.csv'),
-                                          self.status_collection)
-        self.assertFalse(result)
+        self.assertFalse(fail)
 
-
+        
     def test_add_user(self):
         '''
         Test add_user method
+        Author: Kathleen Wong
         '''
         # Test add_user function success
         user_collection = main.init_user_collection()
-        result = main.add_user('mbak79', 'mbakke4@uw.edu', 'Marcus', 'Bakke', user_collection)
+        result = main.add_user('kwong', 'kwong@gmail.com', 'Kathleen', 'Wong', user_collection)
         self.assertTrue(result)
-        self.assertEqual(user_collection.database['mbak79'].user_id, 'mbak79')
-        self.assertEqual(user_collection.database['mbak79'].email, 'mbakke4@uw.edu')
-        self.assertEqual(user_collection.database['mbak79'].user_name, 'Marcus')
-        self.assertEqual(user_collection.database['mbak79'].user_last_name, 'Bakke')
-        # Test add_user function failure
-        result = main.add_user('mbak79', 'test@gmail.com', 'Test1', 'Test2', user_collection)
-        self.assertFalse(result)
-        self.assertEqual(user_collection.database['mbak79'].user_id, 'mbak79')
-        self.assertEqual(user_collection.database['mbak79'].email, 'mbakke4@uw.edu')
-        self.assertEqual(user_collection.database['mbak79'].user_name, 'Marcus')
-        self.assertEqual(user_collection.database['mbak79'].user_last_name, 'Bakke')
-        result = main.add_user('mba1239', 'test@.', 'Test1', 'Test2', user_collection)
-        self.assertFalse(result)
+        fail = main.add_user('kwong', 'kwong@gmail.com', 'Kathleen', 'Wong', user_collection)
+        self.assertFalse(fail)
 
     def test_update_user(self):
         '''
         Test update_user method
+        Author: Kathleen Wong
         '''
         # Test update_user function success
         user_collection = main.init_user_collection()
-        filename = os.path.join('test_files', 'test_good_accounts.csv')
-        main.load_users(filename, user_collection)
+        main.add_user('dave03', 'dave@gmail.com', 'dave', 'yuen', user_collection)
         result = main.update_user('dave03',
                                   'newemail@gmail.com',
                                   'Notdave',
                                   'Notyuen',
                                   user_collection)
-        self.assertEqual(user_collection.database['dave03'].email, 'newemail@gmail.com')
-        self.assertEqual(user_collection.database['dave03'].user_name, 'Notdave')
-        self.assertEqual(user_collection.database['dave03'].user_last_name, 'Notyuen')
+        user = user_collection.database.get(user_collection.database.user_id == 'dave03')
+        self.assertEqual(user.user_email, 'newemail@gmail.com')
+        self.assertEqual(user.user_name, 'Notdave')
+        self.assertEqual(user.user_last_name, 'Notyuen')
         self.assertTrue(result)
-        # Test update_user function failure
-        result = main.update_user('test123',
-                                  'some_email@gmail.com',
-                                  'Test1',
-                                  'Test',
-                                  user_collection)
-        self.assertFalse(result)
-        result = main.update_user('test123',
-                                  'some_email@gmail.com',
-                                  'Test',
-                                  'Test',
-                                  user_collection)
-        self.assertFalse(result)
-        result = main.update_user('test 123',
-                                  'some_email@gmail.com',
-                                  'Test',
-                                  'Test',
-                                  user_collection)
-        self.assertFalse(result)
-        result = main.update_user('test123',
-                                  'some_email@gmail.com',
-                                  'Test',
-                                  '123124',
-                                  user_collection)
-        self.assertFalse(result)
-
-    @patch('users.UserCollection.delete_user')
-    def test_mock_delete_user(self, mock_delete_user):
-        '''
-        Test delete_user method with mock
-        '''
-        # Set mock return value
-        mock_delete_user.return_value = True
-        # Test delete_user function success
-        user_collection = main.init_user_collection()
-        filename = os.path.join('test_files', 'test_good_accounts.csv')
-        main.load_users(filename, user_collection)
-        result = main.delete_user('dave03', user_collection)
-        self.assertTrue(result)
-        self.assertTrue(mock_delete_user.called)
-        # self.assertTrue('dave03' not in user_collection.database)
-        # Set mock return value
-        mock_delete_user.return_value = False
-        # Test delete_user function failure
-        result = main.delete_user('test123', user_collection)
-        self.assertFalse(result)
-        self.assertTrue(mock_delete_user.called)
+        fail = main.update_user('fail', 'fail@gmail.com', 'Fail', 'Test', user_collection)
+        self.assertFalse(fail)
 
     def test_delete_user(self):
         '''
         Test delete_user method
+        Author: Kathleen Wong
         '''
-        # Test delete_user function success
         user_collection = main.init_user_collection()
-        filename = os.path.join('test_files', 'test_good_accounts.csv')
-        main.load_users(filename, user_collection)
+        main.add_user('dave03', 'dave@gmail.com', 'dave', 'yuen', user_collection)
         result = main.delete_user('dave03', user_collection)
         self.assertTrue(result)
-        self.assertTrue('dave03' not in user_collection.database)
-        # Test delete_user function failure
-        result = main.delete_user('test123', user_collection)
-        self.assertFalse(result)
+        fail = main.delete_user('fail', user_collection)
+        self.assertFalse(fail)
 
     def test_search_user(self):
         '''
         Test search_user method
+        Author: Kathleen Wong
         '''
-        # Test search_user function success
         user_collection = main.init_user_collection()
-        filename = os.path.join('test_files', 'test_good_accounts.csv')
-        main.load_users(filename, user_collection)
+        main.add_user('dave03', 'dave@gmail.com', 'dave', 'yuen', user_collection)
         result = main.search_user('dave03', user_collection)
-        self.assertIsNotNone(result)
-        expected = users.Users('dave03', 'david.yuen@gmail.com', 'David', 'Yuen')
-        keys = ['user_id', 'email', 'user_name', 'user_last_name']
-        for attr in keys:
-            self.assertEqual(getattr(result, attr), getattr(expected, attr))
-        # Test search_user function failure
-        result = main.search_user('test123', user_collection)
-        self.assertIsNone(result)
+        self.assertTrue(result)
+        fail = main.search_user('fail', user_collection)
+        self.assertIsNone(fail)
 
     def test_add_status(self):
         '''
