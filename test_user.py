@@ -61,10 +61,15 @@ class TestUser(unittest.TestCase):
         '''
         Test delete_user
         '''
+        sm.Status.create(status_id='test_01', user_id='test01', status_text='Testing')
+        status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
+        self.assertTrue(status)
         delete_test = self.user_collection.delete_user('test01')
         self.assertTrue(delete_test)
         delete_fail = self.user_collection.delete_user('fail')
         self.assertFalse(delete_fail)
+        status2 = status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
+        self.assertFalse(status2)
 
     def test_search_user(self):
         self.user_collection.add_user('search_test', 'search_test@gmail.com', 'Search', 'Account')
