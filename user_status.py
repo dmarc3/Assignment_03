@@ -8,7 +8,7 @@ eliminate these warnings but couldn't. Seemed like pylint-peewee could
 be a good pylint plugin but it seems under developed and I couldn't get
 it to work.
 
-This also appears to occur with Django as well. 
+This also appears to occur with Django as well.
 Source: https://stackoverflow.com/questions/115977/using-pylint-with-django
 '''
 # pylint: disable=E1101
