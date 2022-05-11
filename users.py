@@ -2,7 +2,7 @@
 Classes for user information for the social network project
 All edits made by Kathleen Wong to incorporate logging issues.
 '''
-# pylint: disable=R0903
+# pylint: disable=E1101
 import logging
 import peewee as pw
 import socialnetwork_model as sm

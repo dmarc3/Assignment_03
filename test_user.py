@@ -9,17 +9,21 @@ import socialnetwork_model as sm
 
 MODELS = [sm.Users, sm.Status]
 test_db = pw.SqliteDatabase(':memory:')
-test_db.bind(MODELS, bind_refs=False, bind_backrefs=False)
-test_db.connect()
-test_db.create_tables(MODELS)
-test_db.execute_sql('PRAGMA foreign_keys = ON;')
 
 
 class TestUser(unittest.TestCase):
     '''
     Test class for users.py
     '''
-    user_collection = users.UserCollection()
+    def setUp(self):
+        '''
+        setUp method to disable logging.
+        '''
+        test_db.bind(MODELS, bind_refs=False, bind_backrefs=False)
+        test_db.connect()
+        test_db.create_tables(MODELS)
+        test_db.execute_sql('PRAGMA foreign_keys = ON;')
+        self.user_collection = users.UserCollection()
 
     def test_init(self):
         '''
@@ -33,7 +37,8 @@ class TestUser(unittest.TestCase):
         '''
         self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
         self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        user = self.user_collection.database.get_or_none(self.user_collection.database.user_id == 'test01')
+        query = self.user_collection.database.user_id == 'test01'
+        user = self.user_collection.database.get_or_none(query)
         self.assertEqual(user.user_id, 'test01')
         self.assertEqual(user.user_email, 'test@gmail.com')
         self.assertEqual(user.user_name, 'Test')
@@ -61,20 +66,31 @@ class TestUser(unittest.TestCase):
         '''
         Test delete_user
         '''
-        sm.Status.create(status_id='test_01', user_id='test01', status_text='Testing')
-        status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
-        self.assertTrue(status)
+        self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
         delete_test = self.user_collection.delete_user('test01')
         self.assertTrue(delete_test)
         delete_fail = self.user_collection.delete_user('fail')
         self.assertFalse(delete_fail)
-        status2 = status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
-        self.assertFalse(status2)
+        status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
+        self.assertFalse(status)
 
     def test_search_user(self):
+        '''
+        Test search_user
+        '''
         self.user_collection.add_user('search_test', 'search_test@gmail.com', 'Search', 'Account')
         user = self.user_collection.search_user('search_test')
         self.assertEqual(user.user_email, 'search_test@gmail.com')
         self.assertEqual(user.user_name, 'Search')
         self.assertEqual(user.user_last_name, 'Account')
         self.user_collection.search_user('fail')
+
+    def tearDown(self):
+        '''
+        Remove all tables at end of each test and close db.
+        '''
+        test_db.drop_tables(MODELS)
+        test_db.close()
+
+if __name__ == '__main__':
+    unittest.main()

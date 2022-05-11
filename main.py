@@ -22,7 +22,7 @@ def init_user_collection():
 def init_status_collection():
     '''
     Creates and returns a new instance of UserStatusCollection
-    
+
     Author: Marcus Bakke
     '''
     return user_status.UserStatusCollection()
@@ -195,7 +195,7 @@ def search_status(status_id, status_collection):
 def load_collection(filename, keys, collection):
     '''
     Method which loads status or user collection from CSV file
-    
+
     Author: Marcus Bakke
     '''
     # Loop through each row in csv file
@@ -227,12 +227,12 @@ def load_collection(filename, keys, collection):
             # It seems this number is dependent on the specs of the computer...
             # You may need to adjust this if it doesn't run on your computer.
             # Source: https://stackoverflow.com/a/36788489
-            n = 10000
-            for i in range(0, len(data), n):
-                subset = data[i:i+n]
+            num = 10000
+            for i in range(0, len(data), num):
+                subset = data[i:i+num]
                 logging.info('-> Loading entries %s through %s.',
                              i+1,
-                             i+n if i+n < len(data) else len(data))
+                             i+num if i+num < len(data) else len(data))
                 try:
                     collection.database.insert_many(subset).execute()
                 except pw.IntegrityError as err:
