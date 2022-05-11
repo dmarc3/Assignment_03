@@ -31,10 +31,13 @@ class TestUser(unittest.TestCase):
         '''
         Test add_user method.
         '''
-        user = self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        self.assertTrue(user)
-        user2 = self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        self.assertFalse(user2)
+        self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
+        self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
+        user = self.user_collection.database.get_or_none(self.user_collection.database.user_id == 'test01')
+        self.assertEqual(user.user_id, 'test01')
+        self.assertEqual(user.user_email, 'test@gmail.com')
+        self.assertEqual(user.user_name, 'Test')
+        self.assertEqual(user.user_last_name, 'Account')
 
     def test_modify_user(self):
         '''
@@ -58,15 +61,15 @@ class TestUser(unittest.TestCase):
         '''
         Test delete_user
         '''
-        self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        self.user_collection.delete_user('test01')
-        self.user_collection.delete_user('fail')
+        delete_test = self.user_collection.delete_user('test01')
+        self.assertTrue(delete_test)
+        delete_fail = self.user_collection.delete_user('fail')
+        self.assertFalse(delete_fail)
 
-    def search_user(self):
-        self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        user = self.user_collection.search_user('test01')
-        self.assertEqual(user.user_email, 'test@gmail.com')
-        self.assertEqual(user.user_name, 'Test')
+    def test_search_user(self):
+        self.user_collection.add_user('search_test', 'search_test@gmail.com', 'Search', 'Account')
+        user = self.user_collection.search_user('search_test')
+        self.assertEqual(user.user_email, 'search_test@gmail.com')
+        self.assertEqual(user.user_name, 'Search')
         self.assertEqual(user.user_last_name, 'Account')
-        fail = self.user_collection.search_user('fail')
-        self.assertFalse(fail)
+        self.user_collection.search_user('fail')
