@@ -1,6 +1,12 @@
 '''
 Classes to manage the user status messages
 Author: Marcus Bakke
+
+pylint disable E1101 (no-member) in order to element incorrect warnings
+related to peewee model classes. I was trying to find a better way to
+eliminate these warnings but couldn't. Seemed like pylint-peewee could
+be a good pylint plugin but it seems under developed and I couldn't get
+it to work.
 '''
 # pylint: disable=E1101
 import logging
