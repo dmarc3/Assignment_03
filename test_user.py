@@ -37,7 +37,8 @@ class TestUser(unittest.TestCase):
         '''
         self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
         self.user_collection.add_user('test01', 'test@gmail.com', 'Test', 'Account')
-        user = self.user_collection.database.get_or_none(self.user_collection.database.user_id == 'test01')
+        query = self.user_collection.database.user_id == 'test01'
+        user = self.user_collection.database.get_or_none(query)
         self.assertEqual(user.user_id, 'test01')
         self.assertEqual(user.user_email, 'test@gmail.com')
         self.assertEqual(user.user_name, 'Test')
@@ -70,10 +71,13 @@ class TestUser(unittest.TestCase):
         self.assertTrue(delete_test)
         delete_fail = self.user_collection.delete_user('fail')
         self.assertFalse(delete_fail)
-        status2 = status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
-        self.assertFalse(status2)
+        status = sm.Status.get_or_none(sm.Status.status_id == 'test_01')
+        self.assertFalse(status)
 
     def test_search_user(self):
+        '''
+        Test search_user
+        '''
         self.user_collection.add_user('search_test', 'search_test@gmail.com', 'Search', 'Account')
         user = self.user_collection.search_user('search_test')
         self.assertEqual(user.user_email, 'search_test@gmail.com')
