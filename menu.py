@@ -81,7 +81,7 @@ def search_user():
         logging.info("ERROR: User does not exist")
     else:
         logging.info('User ID: %s', result.user_id)
-        logging.info('Email: %s', result.email)
+        logging.info('Email: %s', result.user_email)
         logging.info('Name: %s', result.user_name)
         logging.info('Last name: %s', result.user_last_name)
 
